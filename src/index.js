@@ -26,10 +26,20 @@ fetch('http://127.0.0.1:3000/pups')
                 dog.isGoodDog = !dog.isGoodDog
                 detailButton.textContent = dog.isGoodDog ? "Good Dog!" : "Bad Dog!"
             })
-
         })
+    
+    })
+    const filterGoodButton = document.getElementById('good-dog-filter')
+    filterGoodButton.addEventListener('click', e => {
+        const optionA = 'Filter good dogs: OFF'
+        const optionB = 'Filter good dogs: On'
+        if(filterGoodButton.textContent === optionA){
+            filterGoodButton.textContent = optionB
+        }else{
+            filterGoodButton.textContent = optionA
+        }
+
         
-      
     })
 })
 
