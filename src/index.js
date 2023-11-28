@@ -1,56 +1,63 @@
+const DogBarElement = document.getElementById('dog-bar')
+const url = 'http://127.0.0.1:3000/pups'
+const dogImageElement = document.createElement('img')
+const dogNameElement = document.createElement('h2')
+const goodDogButtonElement = document.createElement('button')
+const dogInfoElement = document.getElementById('dog-info')
+let currentDog
 
-fetch('http://127.0.0.1:3000/pups')
-.then(resp => resp.json())
-.then(dogData => {
-
-    dogData.map(dog => {
-        const dogBarDiv = document.getElementById('dog-bar')
-        const nameSpanElement = document.createElement('span')
-        nameSpanElement.textContent = dog.name
-        dogBarDiv.appendChild(nameSpanElement)
-
-
-        nameSpanElement.addEventListener('click', e => {
-            const dogInfoDiv = document.getElementById('dog-info')
-            dogInfoDiv.innerHTML = ' '
-            const detailImg = document.createElement('img')
-            const detailName = document.createElement('h2')
-            const detailButton = document.createElement('button')
-            detailImg.src = dog.image
-            detailName.textContent = dog.name
-            detailButton.textContent = dog.isGoodDog ? "Good Dog!" : "Bad Dog!"
-            dogInfoDiv.append(detailImg, detailName, detailButton)
-
-
-            detailButton.addEventListener('click', e => {
-                dog.isGoodDog = !dog.isGoodDog
-                detailButton.textContent = dog.isGoodDog ? "Good Dog!" : "Bad Dog!"
-            })
+fetch(url)
+    .then(res => res.json())
+    .then(dogData => {dogData.forEach(dog => {
+        renderDog(dog)
         })
+    })
+
+function renderDog(dog){
+    const dogSpanElement = document.createElement('span')
+    dogSpanElement.textContent = dog.name
+    DogBarElement.appendChild(dogSpanElement)
+    dogSpanElement.addEventListener('click', () => {
+        displayDog(dog)
+    })}
+
+function displayDog(dog){
+    currentDog = dog
+    dogImageElement.src = dog.image
+    dogNameElement.textContent = dog.name
+    goodDogButtonElement.textContent = dog.isGoodDog ? "Good Dog!" : "Bad Dog!"
+    dogInfoElement.append(dogImageElement, dogNameElement, goodDogButtonElement)
+    }
+
+goodDogButtonElement.addEventListener('click', (e)=> {
+    e.preventDefault()
+    console.log('button clicked')
+    currentDog.isGoodDog = !currentDog.isGoodDog
+    goodDogButtonElement.textContent = currentDog.isGoodDog ? "Good Dog!" : "Bad Dog!"
+    let updatedData = {isGoodDog: currentDog.isGoodDog}
+    console.log(currentDog.id)
+    fetch(`http://127.0.0.1:3000/pups/${currentDog.id}`, {
+        method: 'PATCH',
+        headers : {
+            "Content-Type" : "application/json"
+                    },
+        body: JSON.stringify(updatedData)}
+        )
+    } 
+    )
+
+// function patchDog(id, updatingdData){
+//     fetch(`http://127.0.0.1:3000/pups/${id}`, {
+//         method: 'PATCH',
+//         headers : {
+//             "Content-Type" : "application/json"
+//                     },
+//         body: JSON.stringify(updatingdData)}
+//         )} 
+
+
+
     
-    })
-    const filterGoodButton = document.getElementById('good-dog-filter')
-    filterGoodButton.addEventListener('click', e => {
-        const optionA = 'Filter good dogs: OFF'
-        const optionB = 'Filter good dogs: On'
-        if(filterGoodButton.textContent === optionA){
-            filterGoodButton.textContent = optionB
-        }else{
-            filterGoodButton.textContent = optionA
-        }
-
-        
-    })
-})
-
-
-
-
-
-
-
-
-
 
 
 
