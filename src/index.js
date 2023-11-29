@@ -1,8 +1,22 @@
 
+//1 create span element. set textcontenet to name of dog and append to div dogbar
+const dogBarElement = document.getElementById('dog-bar')
+
+fetch('http://127.0.0.1:4000/pups')
+    .then(resp => resp.json())
+    .then(dogArray => {
+        dogArray.forEach(dog => {
+            displayDogNameinBar(dog)
+    })
+})
 
 
+function displayDogNameinBar(singleDog){
+    const dogSpanElement = document.createElement('span')
+    dogSpanElement.textContent = singleDog.name
+    dogBarElement.appendChild(dogSpanElement)
 
-
+}
 
 
 
