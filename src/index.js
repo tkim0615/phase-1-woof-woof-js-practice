@@ -1,4 +1,96 @@
 
+const dogBarElement = document.getElementById('dog-bar')
+const dogInfoDivElement = document.getElementById('dog-info')
+const dogDetailImageElement = document.createElement('img')
+const dogDetailNameElement = document.createElement('h2')
+const dogDetailButtonElement = document.createElement('button')
+
+let currentDog
+
+fetch('http://127.0.0.1:3000/pups')
+    .then(resp => resp.json())
+    .then(dogList => {
+        dogList.forEach(dog => {
+            addNameToDogBar(dog)
+    })
+    })
+//function used in forEach loop to add each name to dog bar
+function addNameToDogBar(dog){
+    const dogSpanElement = document.createElement('span')
+    dogSpanElement.textContent = dog.name
+    dogBarElement.appendChild(dogSpanElement)
+    //click event handler
+    dogSpanElement.addEventListener('click', () => {
+        displayDogDetail(dog)
+    })
+}
+//step 3 - function used in click event handler above 
+function displayDogDetail(dog){
+    currentDog = dog
+    dogDetailImageElement.src = dog.image
+    dogDetailNameElement.textContent = dog.name
+    dogDetailButtonElement.textContent = dog.isGoodDog ? "Good Dog!" : "Bad Dog!"
+    dogInfoDivElement.append(dogDetailImageElement, dogDetailNameElement, dogDetailButtonElement)
+}
+
+//step 4: Toggle good dog. 
+ dogDetailButtonElement.addEventListener('click', () => {
+    currentDog.isGoodDog = !currentDog.isGoodDog
+
+    let updatedIsGoodDog = {
+        isGoodDog: currentDog.isGoodDog
+    }
+    fetchNewDog(currentDog.id, updatedIsGoodDog)
+        .then(resp => resp.json())
+        .then(updatedIsGoodDog => {
+        console.log(updatedIsGoodDog)
+        dogDetailButtonElement.textContent = updatedIsGoodDog.isGoodDog ? "Good Dog!" : "Bad Dog!"
+                                    //updatedIsGoodDog whole object and we want access to isGoodDog key only
+    })
+ })
+//need return inside function.  the fetch function returns a Promise that resolves to the Response to that request. When you call fetchNewDog, it initiates the network request, but if you don't return the result of the fetch function, you won't be able to chain .then or .catch on it outside the fetchNewDog function.
+//By adding the return statement before fetch, you ensure that the Promise returned by fetch is passed to the caller of fetchNewDog. This allows you to chain .then and .catch onto the returned Promise, as demonstrated in your event listener:
+function fetchNewDog(id, updatedInfo){
+    return fetch(`http://127.0.0.1:3000/pups/${id}`,{
+        method: 'PATCH',
+        headers: {'Content-Type': "application/json"},
+        body: JSON.stringify(updatedInfo)
+    })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // const dogBarDivElement = document.querySelector('div#dog-bar')
 // const dogInfoDivElement = document.querySelector('div#dog-info')
 
