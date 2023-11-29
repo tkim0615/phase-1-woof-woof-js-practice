@@ -14,6 +14,7 @@ fetch(url)
     })
 
 function renderDog(dog){
+    console.log(dog)
     const dogSpanElement = document.createElement('span')
     dogSpanElement.textContent = dog.name
     DogBarElement.appendChild(dogSpanElement)
@@ -30,10 +31,9 @@ function displayDog(dog){
     }
 
 goodDogButtonElement.addEventListener('click', (e)=> {
-    e.preventDefault()
+    
     console.log('button clicked')
     currentDog.isGoodDog = !currentDog.isGoodDog
-    goodDogButtonElement.textContent = currentDog.isGoodDog ? "Good Dog!" : "Bad Dog!"
     let updatedData = {isGoodDog: currentDog.isGoodDog}
     console.log(currentDog.id)
     fetch(`http://127.0.0.1:3000/pups/${currentDog.id}`, {
@@ -43,21 +43,14 @@ goodDogButtonElement.addEventListener('click', (e)=> {
                     },
         body: JSON.stringify(updatedData)}
         )
+        .then(resp => resp.json())
+        .then(updatedData => {
+            goodDogButtonElement.textContent = currentDog.isGoodDog ? "Good Dog!" : "Bad Dog!"
+            console.log(updatedData)
+        })
     } 
     )
 
-// function patchDog(id, updatingdData){
-//     fetch(`http://127.0.0.1:3000/pups/${id}`, {
-//         method: 'PATCH',
-//         headers : {
-//             "Content-Type" : "application/json"
-//                     },
-//         body: JSON.stringify(updatingdData)}
-//         )} 
-
-
-
-    
 
 
 
