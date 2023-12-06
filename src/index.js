@@ -10,17 +10,14 @@ fetch('http://127.0.0.1:4000/pups')
             displayDogNameinBar(dog)
     })
 })
-
 function displayDogNameinBar(singleDog){
-
     const dogSpanElement = document.createElement('span')
     dogSpanElement.textContent = singleDog.name
     dogBarElement.appendChild(dogSpanElement)
-
     //2 click event on spanelement. create image element, h2, button, set its content and append to dog-info div
+    
     dogSpanElement.addEventListener('click', ()=> {
     currentDog = singleDog
-
         dogInfoElement.innerHTML = ''
         const imgElement = document.createElement('img')
         const nameELement = document.createElement('h2')
